@@ -1,20 +1,34 @@
 import scala.annotation.tailrec
 
 @tailrec
-final def countIncrements(iterator: Iterator[Int], previous: Option[Int] = None, count: Int = 0): Int = {
-  if (iterator.hasNext) {
+final def countInc(iterator: Iterator[Int], previous: Option[Int] = None, count: Int = 0): Int = {
+  if (iterator.hasNext)
     val current = iterator.next
-    if (previous.exists(_ < current)) {
-      countIncrements(iterator, Some(current), count + 1)
-    } else {
-      countIncrements(iterator, Some(current), count)
-    }
-  } else {
-    count
-  }
+    if (previous.exists(_ < current)) countInc(iterator, Some(current), count + 1)
+    else countInc(iterator, Some(current), count)
+  else count
 }
 
-countIncrements(numbers.iterator)
+@tailrec
+final def countGrpInc(
+    iterator: Iterator[Int],
+    maybeTwo: Option[Int] = None,
+    maybeOne: Option[Int] = None,
+    previousSum: Option[Int] = None,
+    count: Int = 0
+): Int = {
+  if (iterator.hasNext)
+    val two: Option[Int] = maybeTwo.orElse(iterator.nextOption)
+    val one: Option[Int] = maybeOne.orElse(iterator.nextOption)
+    val current: Option[Int] = iterator.nextOption
+    val sum: Int = Seq(two, one, current).flatten.sum
+    if (current.isDefined && previousSum.exists(_ < sum)) countGrpInc(iterator, one, current, Some(sum), count + 1)
+    else countGrpInc(iterator, one, current, Some(sum), count)
+  else count
+}
+
+countInc(numbers.iterator)
+countGrpInc(numbers.iterator)
 
 final lazy val numbers =
   Seq(193, 195, 204, 208, 219, 230, 231, 233, 234, 241, 253, 260, 261, 265, 268, 279, 277, 297, 299, 300, 306, 308, 312,
