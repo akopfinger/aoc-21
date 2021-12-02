@@ -1,3 +1,8 @@
 .history
 .vscode
 .metals
+target/
+.bloop
+**/project/project
+metals.sbt
+.bsp
