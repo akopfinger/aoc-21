@@ -6,3 +6,4 @@ target/
 **/project/project
 metals.sbt
 .bsp
+*.sc
