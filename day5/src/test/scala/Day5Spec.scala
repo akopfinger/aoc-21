@@ -26,17 +26,12 @@ class Day5Spec extends AnyFlatSpec with Matchers {
       def stepDir(start: Int, end: Int): Int = if (start > end) then -1 else 1
 
       def getCoordinates: Vector[(Int, Int)] =
-        if isDiagonal then getDiagonalCoordinates
+        if isDiagonal then
+          (for (x <- x1 to x2 by stepDir(x1, x2))
+            yield x).zip((for (y <- y1 to y2 by stepDir(y1, y2)) yield y)).toVector
         else
           (if isHorizontal then for (i <- y1 to y2 by stepDir(y1, y2)) yield (x1, i)
            else for (i <- x1 to x2 by stepDir(x1, x2)) yield (i, y1)).toVector
-
-      def getDiagonalCoordinates: Vector[(Int, Int)] = {
-        val xs = for (x <- x1 to x2 by stepDir(x1, x2)) yield x
-        val ys = for (y <- y1 to y2 by stepDir(y1, y2)) yield y
-
-        xs.zipWithIndex.map(((x, i) => (x, ys(i)))).toVector
-      }
 
       def isHorizontal: Boolean = x1 == x2
       def isVertical: Boolean = y1 == y2
@@ -53,19 +48,17 @@ class Day5Spec extends AnyFlatSpec with Matchers {
   }
 
   "part-1" should "count overlapping vents" in new SubmarineSeismologyFunctions {
-    val input = aocInput | trimValues | toVector
-    val lines = input.collect { case reg(x1, y1, x2, y2) =>
+    val lines = (aocInput | trimValues | toVector).collect { case reg(x1, y1, x2, y2) =>
       Line(x1.toInt, x2.toInt, y1.toInt, y2.toInt)
     }
     countOverlapping(lines) shouldBe 7142
   }
 
   "part-2" should "include countDiagonals" in new SubmarineSeismologyFunctions {
-    val input = aocInput | trimValues | toVector
-    val lines = input.collect { case reg(x1, y1, x2, y2) =>
+    val lines = (aocInput | trimValues | toVector).collect { case reg(x1, y1, x2, y2) =>
       Line(x1.toInt, x2.toInt, y1.toInt, y2.toInt)
     }
 
-    countOverlapping(lines, includeDiagonal = true) shouldBe 2
+    countOverlapping(lines, includeDiagonal = true) shouldBe 20012
   }
 }
