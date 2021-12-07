@@ -1,5 +1,5 @@
-name := "aoc-21-5"
-description := "Day 5: Hydrothermal Venture"
+name := "aoc-21-6"
+description := "Day 6: Lanternfish"
 version := "0.1-SNAPSHOT"
 scalaVersion := "3.1.0"
 
